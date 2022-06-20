@@ -15,6 +15,14 @@ void llenarTableros(char (*superior)[TAMANO_MAT], char (*inferior)[TAMANO_MAT]) 
     llenarTablero(inferior);
 }
 
+char obtenerCaracterAdecuado(char casilla) {
+    switch (casilla) {
+        case 'T': return ' ';
+        
+        default: return ' ';
+    }
+}
+
 void mostrarTablero(char (*matriz)[TAMANO_MAT]) {
     // Encabezado
     printf("| C |");
@@ -28,7 +36,7 @@ void mostrarTablero(char (*matriz)[TAMANO_MAT]) {
         printf("| %i |", i);
 
         for(int j = 0; j < TAMANO_MAT; j++) {
-            printf("| %c |", matriz[i][j]);
+            printf("| %c |", obtenerCaracterAdecuado(matriz[i][j]));
         }
         printf("\n");
     }
