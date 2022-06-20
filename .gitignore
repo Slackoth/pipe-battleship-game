@@ -1,3 +1,9 @@
+# .cpp compilado
+jugador-1
+
+# Folder Run & Debug
+.vscode
+
 # Prerequisites
 *.d
 
