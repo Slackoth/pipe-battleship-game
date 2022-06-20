@@ -6,9 +6,12 @@
 #include "string.h"
 #include "stdbool.h"
 #include "mensaje.h"
+#include "tablero.h"
 
 int fil;
 int col;
+char superior[TAMANO_MAT][TAMANO_MAT];
+char inferior[TAMANO_MAT][TAMANO_MAT];
 
 int main() {
     int aux = 1;
@@ -20,7 +23,7 @@ int main() {
     mensaje recibir;
 
     // Inicializar tablero
-    // TODO
+    llenarTableros(superior, inferior);
 
     // Indicar que el jugador 1 ha empezado
     enviar.tipo = 1;
@@ -54,7 +57,7 @@ int main() {
     }
 
     // Mostrar tablero vacio
-    // TODO
+    mostrarTableros(superior, inferior);
 
     // Colocar tropas en tablero
     // TODO
