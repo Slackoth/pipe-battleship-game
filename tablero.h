@@ -197,4 +197,53 @@ bool posicionarTropa(std::pair<int, int>& coordenada, posicion tipoPosicion, cha
     }
 }
 
+bool esCoordenadaIngresada(std::pair<int, int>& coordenada, char (*matriz)[TAMANO_MAT]) {
+    return matriz[coordenada.first][coordenada.second] == 'X' || matriz[coordenada.first][coordenada.second] == 'O';
+}
+
+void registrarMiAtaque(std::pair<int, int>& coordenada, int movimiento, char (*matriz)[TAMANO_MAT]) {
+    switch(movimiento) {
+        case 0: matriz[coordenada.first][coordenada.second] = 'O'; printf("¡Fallaste!\n"); break;
+        case 1: matriz[coordenada.first][coordenada.second] = 'X'; printf("¡Acertaste!\n"); break;
+        default: matriz[coordenada.first][coordenada.second] = 'O'; break;
+    }
+}
+
+int fueGolpe(std::pair<int, int>& coordenada, char (*matriz)[TAMANO_MAT]) {
+    char tropa = matriz[coordenada.first][coordenada.second];
+
+    switch(tropa) {
+        case 'T':
+        case 'A':
+        case 'C':
+        case 'S':
+        case 'D': return 1;
+
+        default: return 0;
+    }
+}
+
+bool tropaHundida(std::pair<int, int>& coordenada, int movimiento, std::unordered_map<char, int>& tropas, char (*matriz)[TAMANO_MAT]) {
+    if(movimiento == 1) {
+        char tropa = matriz[coordenada.first][coordenada.second];
+        int valor = tropas[tropa];
+
+        // Disminuir valor de tropa
+        tropas[tropa] = valor - 1;
+
+        // Colocar golpe
+        printf("¡Acerto!\n"); 
+        matriz[coordenada.first][coordenada.second] = 'X';
+
+        if(tropas[tropa] == 0) {
+            printf("¡Tropa hundida!\n"); 
+            return true;
+        }
+        else
+            return false;
+    }
+    else 
+        return false;
+}
+
 #endif

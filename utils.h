@@ -13,4 +13,15 @@ std::string obtenerNombreTropa(char tropa) {
     }
 }
 
+void disminuirOponenteTropas(int& tropas, bool tropaHundida) {
+    if(tropaHundida) {
+        --tropas;
+        printf("¡Tropa del oponente hundida! Tropas restantes: %i", tropas);
+    }
+}
+
+bool hayGanador(int& tropas) {
+    return tropas == 0;
+}
+
 #endif
