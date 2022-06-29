@@ -86,17 +86,33 @@ std::pair<char, int> crearTropa(char tropaKey) {
     return {tropaKey, tropas.at(tropaKey)};
 }
 
-bool esPosibleArriba(int x, int casillas, char (*matriz)[TAMANO_MAT]) {
-    for(int i = x, j = casillas; j > 0; i--, j--) 
-        if(matriz[i][casillas] != 'V') 
+bool esPosibleArriba(std::pair<int, int>& coordenada, int casillas, char (*matriz)[TAMANO_MAT]) {
+    for(int i = coordenada.first, j = casillas; j > 0; i--, j--) 
+        if(matriz[i][coordenada.second] != 'V') 
             return false;
     
     return true;
 }
 
-bool esPosibleAbajo(int y, int casillas, char (*matriz)[TAMANO_MAT]) {
-    for(int i = y; i < casillas; i++) 
-        if(matriz[i][casillas] != 'V') 
+bool esPosibleAbajo(std::pair<int, int>& coordenada, int casillas, char (*matriz)[TAMANO_MAT]) {
+    for(int i = coordenada.first, j = casillas; j > 0; i++, j--) 
+        if(matriz[i][coordenada.second] != 'V') 
+            return false;
+    
+    return true;
+}
+
+bool esPosibleIzquierda(std::pair<int, int>& coordenada, int casillas, char (*matriz)[TAMANO_MAT]) {
+    for(int i = coordenada.second, j = casillas; j > 0; i--, j--) 
+        if(matriz[coordenada.first][i] != 'V') 
+            return false;
+    
+    return true;
+}
+
+bool esPosibleDerecha(std::pair<int, int>& coordenada, int casillas, char (*matriz)[TAMANO_MAT]) {
+    for(int i = coordenada.second, j = casillas; j > 0; i++, j--)  
+        if(matriz[coordenada.first][i] != 'V') 
             return false;
     
     return true;
@@ -104,57 +120,76 @@ bool esPosibleAbajo(int y, int casillas, char (*matriz)[TAMANO_MAT]) {
 
 posicion obtenerPosicionVertical(std::pair<int, int>& coordenada, int casillas, char (*matriz)[TAMANO_MAT]) {
     if(coordenada.first - casillas + 1 >= 0) 
-        if(esPosibleArriba(coordenada.first, casillas, matriz))
+        if(esPosibleArriba(coordenada, casillas, matriz))
             return ARRIBA;
     
     if(coordenada.first + casillas < TAMANO_MAT)
-        if(esPosibleAbajo(coordenada.first, casillas, matriz))
+        if(esPosibleAbajo(coordenada, casillas, matriz))
             return ABAJO;
     
     printf("Ya existe una tropa ocupando una de las casillas donde se quiere posicionar verticalmente la nueva tropa.\n");
     return INVALIDA;      
 }
 
-posicion obtenerPosicionHorizontal(int y, int casillas) {
+posicion obtenerPosicionHorizontal(std::pair<int, int>& coordenada, int casillas, char (*matriz)[TAMANO_MAT]) {
+    if(coordenada.second - casillas + 1 >= 0) 
+        if(esPosibleIzquierda(coordenada, casillas, matriz))
+            return IZQUIERDA;
+    
+    if(coordenada.second + casillas < TAMANO_MAT)
+        if(esPosibleDerecha(coordenada, casillas, matriz))
+            return DERECHA;
+    
+    printf("Ya existe una tropa ocupando una de las casillas donde se quiere posicionar verticalmente la nueva tropa.\n");
     return INVALIDA; 
 }
 
-bool posicionarVertical(std::pair<int, int>& coordenada, std::pair<char, int>& tropa, char (*matriz)[TAMANO_MAT]) {
-    posicion pos = obtenerPosicionVertical(coordenada, tropa.second, matriz);
+void posicionarArribaIzquierda(std::pair<int, int>& coordenada, std::pair<char, int>& tropa, posicion pos, char (*matriz)[TAMANO_MAT]) {    
+    for(int i = pos == ARRIBA ? coordenada.first : coordenada.second, j = tropa.second; j > 0; i--, j--) 
+        if(pos == ARRIBA)
+            matriz[i][coordenada.second] = tropa.first;
+        else
+            matriz[coordenada.first][i] = tropa.first;
+}
+
+void posicionarAbajoDerecha(std::pair<int, int>& coordenada, std::pair<char, int>& tropa, posicion pos, char (*matriz)[TAMANO_MAT]) {    
+    for(int i = pos == ABAJO ? coordenada.first : coordenada.second, j = tropa.second; j > 0; i++, j--) 
+        if(pos == ABAJO)
+            matriz[i][coordenada.second] = tropa.first;
+        else
+            matriz[coordenada.first][i] = tropa.first;
+}
+
+void posicionar(std::pair<int, int>& coordenada, std::pair<char, int>& tropa, posicion pos, char (*matriz)[TAMANO_MAT]) {
+    switch (pos) {
+        case ARRIBA:
+        case IZQUIERDA: posicionarArribaIzquierda(coordenada, tropa, pos, matriz); break;
+        
+        case ABAJO:
+        case DERECHA: posicionarAbajoDerecha(coordenada, tropa, pos, matriz); break;
+
+        default: return;
+    }
+}
+
+bool posicionarVerticalHorizontal(std::pair<int, int>& coordenada, std::pair<char, int>& tropa, posicion tipoPosicion, char (*matriz)[TAMANO_MAT]) {
+    posicion pos = 
+        tipoPosicion == VERTICAL ? obtenerPosicionVertical(coordenada, tropa.second, matriz) : obtenerPosicionHorizontal(coordenada, tropa.second, matriz);
 
     if(pos == INVALIDA)
         return false;
-    else if(pos == ARRIBA) {
-        for(int i = coordenada.first, j = tropa.second; j > 0; i--, j--) 
-            matriz[i][coordenada.second] = tropa.first;
+    else {
+        posicionar(coordenada, tropa, pos, matriz);
         
         return true;
     }
-    else if(pos == ABAJO) {
-        for(int i = coordenada.first, j = tropa.second; j > 0; i++, j--) 
-            matriz[i][coordenada.second] = tropa.first;
-        
-        return true;
-    }
-    else 
-        return false; 
-}
-
-bool posicionarHorizontal(std::pair<int, int>& coordenada, std::pair<char, int>& tropa, char (*matriz)[TAMANO_MAT]) {
-    return true;
 }
 
 bool posicionarTropa(std::pair<int, int>& coordenada, posicion tipoPosicion, char tropaKey, char (*matriz)[TAMANO_MAT]) {
     if(esCoordenadaValida(coordenada) == VALIDA) {
         std::pair<char, int> tropa = crearTropa(tropaKey);
-        switch (tipoPosicion) {
-            case VERTICAL: return posicionarVertical(coordenada, tropa, matriz);
-            case HORIZONTAL: return posicionarHorizontal(coordenada, tropa, matriz);
-            
-            default: return false;
-        }
-        printf("Coordenada valida.\n");
-        return true;
+        
+        return posicionarVerticalHorizontal(coordenada, tropa, tipoPosicion, matriz);
     }
     else {
         printf("Ha ingresado una coordenada invalida, intente de nuevo.\n");

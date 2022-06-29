@@ -3,13 +3,15 @@
 #include "sys/msg.h"
 #include "stdlib.h"
 #include "stdio.h"
-#include "string.h"
 #include "stdbool.h"
 #include "mensaje.h"
 #include "tablero.h"
+#include "utils.h"
+#include <iostream>
 
 int fil;
 int col;
+int pos;
 char superior[TAMANO_MAT][TAMANO_MAT];
 char inferior[TAMANO_MAT][TAMANO_MAT];
 
@@ -60,7 +62,28 @@ int main() {
     mostrarTableros(superior, inferior);
 
     // Colocar tropas en tablero
-    // TODO
+    int tropasColocadas = 1;
+    while(tropasColocadas <= 5) {
+        std::cout << "Tropa: " << obtenerNombreTropa(tropasOrden.at(tropasColocadas)) << std::endl;
+        std::cout << "Longitud: " << tropas.at(tropasOrden.at(tropasColocadas)) << " casillas" << std::endl;
+
+        printf("Ingrese la fila inicial de la tropa:\n");
+        scanf("%i", &fil);
+
+        printf("Ingrese la columna inicial de la tropa:\n");
+        scanf("%i", &col);
+
+        printf("¿Vertical (0) u Horizontal (1) ?:\n");
+        scanf("%i", &pos);
+
+        std::pair<int, int> coordenada = {fil, col};
+        bool tropaColocada = posicionarTropa(coordenada, static_cast<posicion>(pos), tropasOrden.at(tropasColocadas), inferior);
+        
+        if(tropaColocada) {
+            tropasColocadas++;
+            mostrarTableros(superior, inferior);
+        }
+    }
 
     // Esperar movimiento del jugador 1
     printf("Esperando al jugador 1...\n");
