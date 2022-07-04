@@ -171,6 +171,8 @@ int main() {
                 msgrcv(jugadorUnoId, &recibir, tamanoMensaje, 0, 0);
 
                 // Verificar que haya sido golpe o fallo
+                coordenada.first = recibir.filMat;
+                coordenada.second = recibir.colMat;
                 int golpe = fueGolpe(coordenada, inferior);
                 
                 // Registrar si fue golpe en tablero inferior
