@@ -13,15 +13,20 @@ std::string obtenerNombreTropa(char tropa) {
     }
 }
 
-void disminuirOponenteTropas(int& tropas, bool tropaHundida) {
+void disminuirTropas(int& tropas, bool tropaHundida, std::string msj) {
     if(tropaHundida) {
         --tropas;
-        printf("¡Tropa del oponente hundida! Tropas restantes: %i", tropas);
+        printf(msj.c_str(), tropas);
     }
 }
 
-bool hayGanador(int& tropas) {
-    return tropas == 0;
+int hayGanador(int& misTropas, int& oponenteTropas) {
+    if(misTropas == 0)
+        return 2;
+    else if(oponenteTropas == 0)
+        return 1;
+    else
+        return 0;
 }
 
 #endif

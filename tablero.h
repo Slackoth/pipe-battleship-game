@@ -245,7 +245,7 @@ bool tropaHundida(std::pair<int, int>& coordenada, int movimiento, std::unordere
     else 
         {
             matriz[coordenada.first][coordenada.second] = 'O';
-            printf("¡Fallaste!\n");
+            printf("¡Fallo!\n");
             return false;
         }
 }

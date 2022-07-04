@@ -12,7 +12,8 @@
 int fil;
 int col;
 int pos;
-int oponenteTropas = 5;
+int misTropas = 1;
+int oponenteTropas = 1;
 char superior[TAMANO_MAT][TAMANO_MAT];
 char inferior[TAMANO_MAT][TAMANO_MAT];
 std::unordered_map<char, int> jugadorTropas = {
@@ -71,8 +72,8 @@ int main() {
     mostrarTableros(superior, inferior);
 
     // Colocar tropas en tablero
-    int tropasColocadas = 1;
-    while(tropasColocadas <= 1) {
+    int tropasColocadas = 5;
+    while(tropasColocadas <= 5) {
         std::cout << "Tropa: " << obtenerNombreTropa(tropasOrden.at(tropasColocadas)) << std::endl;
         std::cout << "Longitud: " << tropas.at(tropasOrden.at(tropasColocadas)) << " casillas" << std::endl;
 
@@ -113,18 +114,13 @@ int main() {
 
     // Inicializar juego
     while(1) {
-        if(hayGanador(oponenteTropas)) {
-            printf("¡Ha ganado el jugador 1!\n");
+        int ganador = hayGanador(misTropas, oponenteTropas);
 
-            enviar.tipo = 1;
-            enviar.filMat = 0;
-            enviar.colMat = 0;
-            enviar.tipoMensaje = 2;
-            enviar.mov = SIN_ASIGNAR;
-            enviar.tropaHundida = false;
-            
-            msgsnd(jugadorUnoId, &enviar, tamanoMensaje, 0);
-            return 0;
+        switch (ganador) {
+            case 0: break;
+            case 1: printf("¡Ha ganado el jugador 1!\n"); return 0;
+            case 2: printf("¡Ha ganado el jugador 2!\n"); return 0;
+            default: break;
         }
 
         printf("COORDENADAS DE ATAQUE\n");
@@ -160,10 +156,19 @@ int main() {
                 registrarMiAtaque(coordenada, static_cast<int>(recibir.mov), superior);
 
                 // Disminuir tropas del oponente si una tropa fue hundida
-                disminuirOponenteTropas(oponenteTropas, recibir.tropaHundida);
+                disminuirTropas(oponenteTropas, recibir.tropaHundida, "¡Tropa del oponente hundida! Tropas restantes: %i\n");
                 
                 // Mostrar estado del tablero despues de mi ataque
                 mostrarTableros(superior, inferior);
+
+                ganador = hayGanador(misTropas, oponenteTropas);
+
+                switch (ganador) {
+                    case 0: break;
+                    case 1: printf("¡Ha ganado el jugador 1!\n"); return 0;
+                    case 2: printf("¡Ha ganado el jugador 2!\n"); return 0;
+                    default: break;
+                }
 
                 // Esperar al movimiento del jugador 2
                 printf("Esperando al movimiento del jugador 2...\n");
@@ -177,6 +182,9 @@ int main() {
                 
                 // Registrar si fue golpe en tablero inferior
                 bool hundida = tropaHundida(coordenada, golpe, jugadorTropas, inferior);
+                
+                // Disminuir mis tropas
+                disminuirTropas(misTropas, hundida, "¡Tropa propia hundida! Tropas restantes: %i\n");
 
                 // Mostrar estado del tablero despues del ataque del oponente
                 mostrarTableros(superior, inferior);
@@ -193,11 +201,13 @@ int main() {
 
                 msgsnd(jugadorUnoId, &enviar, tamanoMensaje, 0);
 
-                if(recibir.tipoMensaje == 3) {
-                    printf("¡Ha ganado el jugador 2!\n");
+                ganador = hayGanador(misTropas, oponenteTropas);
 
-                    msgctl(jugadorUnoId, IPC_RMID, 0);
-					return 0;
+                switch (ganador) {
+                    case 0: break;
+                    case 1: printf("¡Ha ganado el jugador 1!\n"); return 0;
+                    case 2: printf("¡Ha ganado el jugador 2!\n"); return 0;
+                    default: break;
                 }
             }
         }
