@@ -61,6 +61,8 @@ int main() {
     enviar.filMat = 0;
     enviar.colMat = 0;
     enviar.tipoMensaje = 0;
+    enviar.mov = SIN_ASIGNAR;
+    enviar.tropaHundida = false;
 
     // Enviar mensaje
     msgsnd(jugadorDosId, &enviar, tamanoMensaje, 0);
@@ -96,7 +98,7 @@ int main() {
     printf("Esperando a que el jugador 1 coloque sus tropas...\n");
 
     // Recibir confirmacion del jugador 1
-    msgrcv(jugadorDosId, &recibir, tamanoMensaje, 0, 0);
+    msgrcv(jugadorDosId, &recibir, tamanoMensaje, 1, 0);
 
     // Salir si la conexion entre jugador 1 y 2 falla
     if(recibir.tipoMensaje != 0) {
@@ -109,10 +111,12 @@ int main() {
     }
 
     // Indicar que el jugador 2 ha colocado sus tropas
-    enviar.tipo = 4;
+    enviar.tipo = 2;
     enviar.filMat = 0;
     enviar.colMat = 0;
     enviar.tipoMensaje = 0;
+    enviar.mov = SIN_ASIGNAR;
+    enviar.tropaHundida = false;
 
     // Enviar mensaje
     msgsnd(jugadorDosId, &enviar, tamanoMensaje, 0);
@@ -121,7 +125,7 @@ int main() {
     printf("Esperando al movimiento del jugador 1...\n");
 
     // Recibir primer movimiento del jugador 1
-    msgrcv(jugadorDosId, &recibir, tamanoMensaje, 0, 0);
+    msgrcv(jugadorDosId, &recibir, tamanoMensaje, 1, 0);
 
     // Verificar que haya sido golpe o fallo
     std::pair<int, int> c = {recibir.filMat, recibir.colMat};

@@ -16,12 +16,12 @@ enum movimiento { FALLO, GOLPE, SIN_ASIGNAR };
 // 		3 = Ganador jugador 2.
 
 typedef struct Mensaje {
-    long tipo;
+    long int tipo;
     int filMat; // Fila de matriz
     int colMat; // Columna de matriz
     movimiento mov;
     bool tropaHundida; 
-    long tipoMensaje;
+    int tipoMensaje;
 } mensaje;
 
 #endif

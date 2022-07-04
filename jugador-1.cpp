@@ -95,7 +95,7 @@ int main() {
     }
 
     // Indicar que el jugador 1 ha colocado sus tropas
-    enviar.tipo = 3;
+    enviar.tipo = 1;
     enviar.filMat = 0;
     enviar.colMat = 0;
     enviar.tipoMensaje = 0;
@@ -109,7 +109,7 @@ int main() {
     printf("Esperando a que el jugador 2  coloque sus tropas...\n");
 
     // Recibir mensaje del jugador 2
-    msgrcv(jugadorUnoId, &recibir, tamanoMensaje, 0, 0);
+    msgrcv(jugadorUnoId, &recibir, tamanoMensaje, 2, 0);
 
     // Inicializar juego
     while(1) {
@@ -154,7 +154,7 @@ int main() {
                 // Esperar si fue un golpe y hundio una tropa o un fallo por parte del jugador 2
                 printf("Esperando si fue un golpe o un fallo por parte del jugador 2...\n");
 
-                msgrcv(jugadorUnoId, &recibir, tamanoMensaje, 0, 0);
+                msgrcv(jugadorUnoId, &recibir, tamanoMensaje, 2, 0);
 
                 // Registrar golpe o fallo en tablero superior
                 registrarMiAtaque(coordenada, static_cast<int>(recibir.mov), superior);
