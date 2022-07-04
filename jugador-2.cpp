@@ -140,7 +140,7 @@ int main() {
     // Enviar si el ataque fue un golpe y hundio una tropa o un fallo
     printf("Enviando si fue un golpe o un fallo al jugador 1...\n");
 
-    enviar.tipo = 1;
+    enviar.tipo = 2;
     enviar.filMat = recibir.filMat;
     enviar.colMat = recibir.colMat;
     enviar.tipoMensaje = 1;
@@ -154,7 +154,7 @@ int main() {
         if(hayGanador(oponenteTropas)) {
             printf("¡Ha ganado el jugador 2!\n");
 
-            enviar.tipo = 1;
+            enviar.tipo = 2;
             enviar.filMat = 0;
             enviar.colMat = 0;
             enviar.tipoMensaje = 3;
@@ -180,10 +180,10 @@ int main() {
                 printf("Coordenada ya ingresada.\n");
             else {
                 // Enviar ataque
-                enviar.tipo = 1;
+                enviar.tipo = 2;
                 enviar.filMat = fil;
                 enviar.colMat = col;
-                enviar.tipoMensaje = 1;
+                enviar.tipoMensaje = 2;
                 enviar.mov = SIN_ASIGNAR;
                 enviar.tropaHundida = false;
                 
@@ -192,7 +192,7 @@ int main() {
                 // Esperar si fue un golpe y hundio una tropa o un fallo por parte del jugador 2
                 printf("Esperando si fue un golpe o un fallo por parte del jugador 1...\n");
 
-                msgrcv(jugadorDosId, &recibir, tamanoMensaje, 0, 0);
+                msgrcv(jugadorDosId, &recibir, tamanoMensaje, 1, 0);
 
                 // Registrar golpe o fallo en tablero superior
                 registrarMiAtaque(coordenada, static_cast<int>(recibir.mov), superior);
@@ -206,7 +206,7 @@ int main() {
                 // Esperar al movimiento del jugador 1
                 printf("Esperando al movimiento del jugador 1...\n");
 
-                msgrcv(jugadorDosId, &recibir, tamanoMensaje, 0, 0);
+                msgrcv(jugadorDosId, &recibir, tamanoMensaje, 1, 0);
 
                 // Verificar que haya sido golpe o fallo
                 int golpe = fueGolpe(coordenada, inferior);
@@ -220,7 +220,7 @@ int main() {
                 // Enviar si el ataque fue un golpe y hundio una tropa o un fallo
                 printf("Enviando si fue un golpe o un fallo al jugador 1...\n");
 
-                enviar.tipo = 1;
+                enviar.tipo = 2;
                 enviar.filMat = recibir.filMat;
                 enviar.colMat = recibir.colMat;
                 enviar.tipoMensaje = 1;
