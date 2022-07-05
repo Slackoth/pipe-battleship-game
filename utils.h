@@ -20,11 +20,30 @@ void disminuirTropas(int& tropas, bool tropaHundida, std::string msj) {
     }
 }
 
-int hayGanador(int& misTropas, int& oponenteTropas) {
-    if(misTropas == 0)
-        return 2;
-    else if(oponenteTropas == 0)
-        return 1;
+int hayGanador(int& misTropas, int& oponenteTropas,int jugadorid) {
+    int ganador=0;
+    if(misTropas == 0){
+        switch (jugadorid)
+        {
+        case 1:
+            ganador=2;
+            break;
+        case 2:
+            ganador=1;
+        }
+        return ganador;
+    }
+    else if(oponenteTropas == 0){
+        switch (jugadorid)
+        {
+        case 1:
+            ganador=1;
+            break;
+        case 2:
+            ganador=2;
+        }
+        return ganador;
+    }
     else
         return 0;
 }

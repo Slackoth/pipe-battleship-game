@@ -12,8 +12,8 @@
 int fil;
 int col;
 int pos;
-int misTropas = 1;
-int oponenteTropas = 1;
+int misTropas = 5;
+int oponenteTropas = 5;
 char superior[TAMANO_MAT][TAMANO_MAT];
 char inferior[TAMANO_MAT][TAMANO_MAT];
 std::unordered_map<char, int> jugadorTropas = {
@@ -72,7 +72,7 @@ int main() {
     mostrarTableros(superior, inferior);
 
     // Colocar tropas en tablero
-    int tropasColocadas = 5;
+    int tropasColocadas = 1;
     while(tropasColocadas <= 5) {
         std::cout << "Tropa: " << obtenerNombreTropa(tropasOrden.at(tropasColocadas)) << std::endl;
         std::cout << "Longitud: " << tropas.at(tropasOrden.at(tropasColocadas)) << " casillas" << std::endl;
@@ -114,12 +114,12 @@ int main() {
 
     // Inicializar juego
     while(1) {
-        int ganador = hayGanador(misTropas, oponenteTropas);
+        int ganador = hayGanador(misTropas, oponenteTropas,1);
 
         switch (ganador) {
             case 0: break;
-            case 1: printf("¡Ha ganado el jugador 1!\n"); return 0;
-            case 2: printf("¡Ha ganado el jugador 2!\n"); return 0;
+            case 1: printf("¡Ha ganado el jugador 2!\n"); return 0;
+            case 2: printf("¡Ha ganado el jugador 1!\n"); return 0;
             default: break;
         }
 
@@ -161,8 +161,9 @@ int main() {
                 // Mostrar estado del tablero despues de mi ataque
                 mostrarTableros(superior, inferior);
 
-                ganador = hayGanador(misTropas, oponenteTropas);
-
+                ganador = hayGanador(misTropas, oponenteTropas,1);
+                
+                //std::cout<<"ganador: "<< ganador;
                 switch (ganador) {
                     case 0: break;
                     case 1: printf("¡Ha ganado el jugador 1!\n"); return 0;
@@ -201,7 +202,7 @@ int main() {
 
                 msgsnd(jugadorUnoId, &enviar, tamanoMensaje, 0);
 
-                ganador = hayGanador(misTropas, oponenteTropas);
+                ganador = hayGanador(misTropas, oponenteTropas,1);
 
                 switch (ganador) {
                     case 0: break;
